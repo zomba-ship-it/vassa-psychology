@@ -7,4 +7,7 @@ node_modules
 bookshop-live.js
 .DS_Store
 site/.bundle
-.bundle
+.bundlenode_modules/
+site/_site/
+site/.jekyll-cache/
+.DS_Store

@@ -2,3 +2,62 @@
 ---
 
 {% bookshop_scss %}
+
+/* Смещаем фокус всех портретных фото вверх, чтобы не обрезалась голова */
+.c-hero__image img,
+.c-page-image img {
+    object-position: center 28%;
+}
+
+/* Перенос тегов на новую строку в карточке блога */
+.c-blog-card__tags-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.c-blog-card__tag {
+    margin: 0 !important;
+    line-height: 1.2 !important;
+    white-space: nowrap;
+}
+
+/* Перенос тегов внутри самой статьи на узких экранах */
+.post-tags {
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.post-tags__tag {
+    margin: 0 !important;
+}
+
+/* Более выразительный полужирный шрифт для ссылок «Все по теме» и «Все статьи» */
+.section__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600 !important;
+    font-size: 16px;
+    letter-spacing: 0.2px;
+    color: #110e38;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+
+    &:hover {
+        opacity: 0.75;
+        transform: translateX(3px);
+    }
+}
+
+/* Настройка размера логотипа в шапке */
+.logo__image {
+    max-height: 120px !important; // Увеличьте или уменьшите это число (по умолчанию в теме 40px)
+    width: auto !important;
+}
+
+/* Отдельный размер логотипа для мобильных экранов, чтобы не сжимать меню */
+@media only screen and (max-width: 576px) {
+    .logo__image {
+        max-height: 80px !important;
+    }
+}

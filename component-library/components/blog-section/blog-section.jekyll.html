@@ -1,31 +1,34 @@
-<!-- begin blog -->
+<!-- begin blog-section -->
 <section class="section blog">
   <div class="container">
     <div class="row">
       <div class="col col-12">
-        <div class="contaniner__inner animate">
-
-          <div class="section__info">
-            <div class="section__head">
-              <h2 class="section__title">{{ include.title }}</h2>
-              <a class="section__link" href="{{ include.link_url | relative_url }}">View all <ion-icon name="arrow-forward"></ion-icon></a>
-            </div>
-            <div class="section__description">{{ include.description_html }} </div>
+        <div class="section__info">
+          <div class="section__head">
+            <h2 class="section__title">{{ include.title }}</h2>
+            <a class="c-button c-button--primary" href="{{ '/blog/' | relative_url }}" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; white-space: nowrap;">
+              <span>Все статьи</span>
+              <i class="ion ion-ios-arrow-forward"></i>
+            </a>
           </div>
-
-          {% if include.show_posts %}
-          <div class="row">
-            {% if site.posts.size > 0 %}
-              {% for post in site.posts offset:0 limit:3 %}
-                {% bookshop blog-card post=post %}
-              {% endfor %}
-            {% endif %}
-          </div>
+          {% if include.description_html %}
+            <div class="section__description">{{ include.description_html }}</div>
           {% endif %}
-
         </div>
       </div>
     </div>
   </div>
+
+  {% if include.show_posts %}
+    <div class="container">
+      <div class="row">
+        {% if site.posts.size > 0 %}
+          {% for post in site.posts offset:0 limit:3 %}
+            {% bookshop blog-card post=post %}
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
 </section>
-<!-- end blog -->
+<!-- end blog-section -->

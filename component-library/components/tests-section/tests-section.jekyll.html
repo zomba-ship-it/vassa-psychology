@@ -1,0 +1,190 @@
+{% assign c = "c-tests-section" %}
+<section class="{{c}}" id="psychology-tests">
+  <div class="container">
+
+    {% if include.disclaimer %}
+    <div class="{{c}}__disclaimer">
+      <p>{{ include.disclaimer }}</p>
+    </div>
+    {% endif %}
+
+    <!-- Сетка карточек с тестами -->
+    <div class="row {{c}}__catalog" id="tests-catalog">
+      {% for test in include.tests %}
+      <div class="col col-4 col-d-6 col-t-12">
+        <div class="{{c}}__card">
+          <div class="{{c}}__card-body">
+            {% if test.badge %}
+            <span class="{{c}}__badge">{{ test.badge }}</span>
+            {% endif %}
+            <h3 class="{{c}}__card-title">{{ test.title }}</h3>
+            <p class="{{c}}__card-desc">{{ test.description }}</p>
+          </div>
+          <div class="{{c}}__card-footer">
+            <button type="button" class="c-button c-button--primary c-button--small" onclick="openPsychTest('{{ test.id }}')">
+              Пройти тест
+            </button>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Зона прохождения выбранного теста -->
+    <div class="{{c}}__workspace" id="test-workspace" style="display: none;">
+      <div class="{{c}}__workspace-header">
+        <button type="button" class="{{c}}__back-btn" onclick="closePsychTest()">
+          ← Ко всем тестам
+        </button>
+        <div class="{{c}}__progress-wrap">
+          <span id="test-progress-text">Вопрос 1 из 5</span>
+          <div class="{{c}}__progress-bar">
+            <div class="{{c}}__progress-fill" id="test-progress-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="{{c}}__active-title" id="active-test-title"></h2>
+
+      <div id="test-questions-wrapper"></div>
+
+      <div class="{{c}}__error" id="test-error-msg" style="display: none;">
+        Пожалуйста, выберите один из вариантов ответа, чтобы увидеть результат.
+      </div>
+
+      <div class="{{c}}__actions" id="test-actions">
+        <button type="button" class="c-button c-button--primary" onclick="submitPsychTest()">
+          Узнать результат
+        </button>
+      </div>
+
+      <!-- Блок с результатом -->
+      <div class="{{c}}__result" id="test-result-box" style="display: none;">
+        <span class="{{c}}__result-label">Ваш результат</span>
+        <h3 class="{{c}}__result-title" id="result-title"></h3>
+        <p class="{{c}}__result-text" id="result-text"></p>
+
+        <div class="{{c}}__result-cta">
+          {% if include.cta_text and include.cta_url %}
+          <a href="{{ include.cta_url | relative_url }}" id="result-cta-link" class="c-button c-button--primary">
+            {{ include.cta_text }}
+          </a>
+          {% endif %}
+          <button type="button" class="c-button c-button--secondary" onclick="restartPsychTest()">
+            Пройти ещё раз
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  const psychTestsData = {{ include.tests | jsonify }};
+  const baseCtaUrl = "{{ include.cta_url | default: '/contact/' | relative_url }}";
+  let currentPsychTest = null;
+
+  function openPsychTest(testId) {
+    currentPsychTest = psychTestsData.find(t => t.id === testId);
+    if (!currentPsychTest) return;
+
+    document.getElementById('tests-catalog').style.display = 'none';
+    document.getElementById('test-workspace').style.display = 'block';
+    document.getElementById('test-result-box').style.display = 'none';
+    document.getElementById('test-actions').style.display = 'block';
+    document.getElementById('test-error-msg').style.display = 'none';
+    document.getElementById('active-test-title').textContent = currentPsychTest.title;
+
+    const wrapper = document.getElementById('test-questions-wrapper');
+    wrapper.innerHTML = '';
+
+    currentPsychTest.questions.forEach((q, qIdx) => {
+      const qBlock = document.createElement('div');
+      qBlock.className = 'c-tests-section__question';
+
+      let optionsHtml = '';
+      q.options.forEach((opt) => {
+        optionsHtml += `
+          <label class="c-tests-section__option">
+            <input type="radio" name="psych_q_${qIdx}" value="${opt.score}" onchange="updatePsychProgress()">
+            <span class="c-tests-section__option-mark"></span>
+            <span class="c-tests-section__option-text">${opt.label}</span>
+          </label>
+        `;
+      });
+
+      qBlock.innerHTML = `
+        <h4 class="c-tests-section__question-title">${qIdx + 1}. ${q.text}</h4>
+        <div class="c-tests-section__options">${optionsHtml}</div>
+      `;
+      wrapper.appendChild(qBlock);
+    });
+
+    updatePsychProgress();
+    document.getElementById('psychology-tests').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function updatePsychProgress() {
+    if (!currentPsychTest) return;
+    const total = currentPsychTest.questions.length;
+    let answered = 0;
+
+    for (let i = 0; i < total; i++) {
+      if (document.querySelector(`input[name="psych_q_${i}"]:checked`)) {
+        answered++;
+      }
+    }
+
+    document.getElementById('test-progress-text').textContent = `Отвечено: ${answered} из ${total}`;
+    const percent = Math.round((answered / total) * 100);
+    document.getElementById('test-progress-fill').style.width = percent + '%';
+    document.getElementById('test-error-msg').style.display = 'none';
+  }
+
+  function submitPsychTest() {
+    if (!currentPsychTest) return;
+    const total = currentPsychTest.questions.length;
+    let totalScore = 0;
+
+    for (let i = 0; i < total; i++) {
+      const checked = document.querySelector(`input[name="psych_q_${i}"]:checked`);
+      if (!checked) {
+        document.getElementById('test-error-msg').style.display = 'block';
+        return;
+      }
+      totalScore += parseInt(checked.value, 10);
+    }
+
+    const matchedResult = currentPsychTest.results.find(r => totalScore <= r.max_score)
+      || currentPsychTest.results[currentPsychTest.results.length - 1];
+
+    document.getElementById('result-title').textContent = matchedResult.title;
+    document.getElementById('result-text').textContent = matchedResult.text;
+
+    const ctaLink = document.getElementById('result-cta-link');
+    if (ctaLink) {
+      const params = new URLSearchParams({
+        test: currentPsychTest.title,
+        result: matchedResult.title
+      });
+      ctaLink.href = `${baseCtaUrl}?${params.toString()}`;
+    }
+
+    document.getElementById('test-actions').style.display = 'none';
+    document.getElementById('test-result-box').style.display = 'block';
+    document.getElementById('test-result-box').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function restartPsychTest() {
+    if (currentPsychTest) {
+      openPsychTest(currentPsychTest.id);
+    }
+  }
+
+  function closePsychTest() {
+    document.getElementById('test-workspace').style.display = 'none';
+    document.getElementById('tests-catalog').style.display = 'flex';
+    currentPsychTest = null;
+  }
+</script>

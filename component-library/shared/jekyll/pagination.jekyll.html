@@ -1,24 +1,29 @@
 <!-- begin pagination -->
-<nav class="pagination">
-  <div class="container">
+<div class="container">
+  <nav class="pagination animate">
     <div class="pagination__inner">
 
       <div class="pagination__list">
-        {% capture prev_text %}<ion-icon name="arrow-back"></ion-icon> Prev{% endcapture %}
-        {% if jekyll.environment != "development" and env_bookshop_live != true %}<a data-pagebreak-control="prev" href="." class="pagination__prev">{{prev_text}}</a> {% endif %}
-        <span data-pagebreak-control="!prev" class="pagination__prev disabled">{{prev_text}}</span>
+        {% capture prev_text %}<i class="ion ion-md-arrow-back"></i> Назад{% endcapture %}
+        {% if paginator.previous_page %}
+          <a class="pagination__prev" href="{{ paginator.previous_page_path | relative_url }}">{{prev_text}}</a>
+        {% else %}
+          <span class="pagination__prev disabled">{{prev_text}}</span>
+        {% endif %}
 
         <div class="pagination__count">
-          Page <span data-pagebreak-label="current">1</span>
-          of <span data-pagebreak-label="total">1</span>
+          Страница <span>{{ paginator.page }}</span> из <span>{{ paginator.total_pages }}</span>
         </div>
 
-        {% capture next_text %}Next <ion-icon name="arrow-forward"></ion-icon>{% endcapture %}
-        {% if jekyll.environment != "development" and env_bookshop_live != true %}<a data-pagebreak-control="next" href="." class="pagination__next">{{next_text}}</a>{% endif %}
-        <span data-pagebreak-control="!next" class="pagination__next disabled">{{next_text}}</span>
+        {% capture next_text %}Вперёд <i class="ion ion-md-arrow-forward"></i>{% endcapture %}
+        {% if paginator.next_page %}
+          <a class="pagination__next" href="{{ paginator.next_page_path | relative_url }}">{{next_text}}</a>
+        {% else %}
+          <span class="pagination__next disabled">{{next_text}}</span>
+        {% endif %}
       </div>
 
     </div>
-  </div>
-</nav>
+  </nav>
+</div>
 <!-- end pagination -->

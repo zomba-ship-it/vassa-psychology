@@ -1,0 +1,205 @@
+---
+title: Важная информация
+permalink: /info/
+---
+
+<style>
+  .c-legal-page {
+    padding: 0 0 80px;
+  }
+
+  .c-legal-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 36px;
+  }
+
+  .c-legal-tab-btn {
+    background-color: #ffffff;
+    color: #110E38;
+    border: 1px solid rgba(17, 14, 56, 0.12);
+    border-radius: 12px;
+    padding: 14px 24px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 6px 20px rgba(17, 14, 56, 0.04);
+  }
+
+  .c-legal-tab-btn:hover {
+    border-color: #1495a7;
+    color: #1495a7;
+  }
+
+  .c-legal-tab-btn.is-active {
+    background-color: #1495a7;
+    color: #ffffff;
+    border-color: #1495a7;
+    box-shadow: 0 10px 25px rgba(20, 149, 167, 0.25);
+  }
+
+  .c-legal-card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 48px;
+    box-shadow: 0 15px 40px rgba(17, 14, 56, 0.05);
+    border: 1px solid rgba(17, 14, 56, 0.06);
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .c-legal-panel {
+    display: none;
+  }
+
+  .c-legal-panel.is-active {
+    display: block;
+  }
+
+  .c-legal-panel h2 {
+    font-size: 32px;
+    line-height: 1.25;
+    margin-top: 0;
+    margin-bottom: 12px;
+    color: #110E38;
+  }
+
+  .c-legal-subtitle {
+    font-size: 18px;
+    font-weight: 500;
+    color: #1495a7;
+    margin-bottom: 28px;
+  }
+
+  .c-legal-panel h3 {
+    font-size: 21px;
+    line-height: 1.35;
+    margin-top: 32px;
+    margin-bottom: 14px;
+    color: #110E38;
+  }
+
+  .c-legal-panel p {
+    font-size: 16px;
+    line-height: 1.75;
+    margin-bottom: 16px;
+    color: rgba(17, 14, 56, 0.88);
+  }
+
+  .c-legal-panel ul {
+    margin: 0 0 20px 0;
+    padding-left: 22px;
+  }
+
+  .c-legal-panel li {
+    font-size: 16px;
+    line-height: 1.7;
+    margin-bottom: 8px;
+    color: rgba(17, 14, 56, 0.88);
+  }
+
+  .c-legal-note {
+    background-color: #f2f6ff;
+    border-left: 4px solid #1495a7;
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin: 24px 0;
+  }
+
+  .c-legal-note p {
+    margin: 0;
+  }
+
+  .c-legal-sign {
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(17, 14, 56, 0.1);
+    font-weight: 600;
+    color: #110E38;
+  }
+
+  .c-legal-inline-link {
+    color: #1495a7;
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: 500;
+  }
+
+  @media (max-width: 768px) {
+    .c-legal-card {
+      padding: 28px 22px;
+    }
+
+    .c-legal-panel h2 {
+      font-size: 26px;
+    }
+
+    .c-legal-tab-btn {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>
+
+<div class="c-page-heading" style="padding-bottom: 32px;">
+  <div class="container">
+    <h1 class="c-page-heading__title">Важная информация</h1>
+    <p class="c-page-heading__description">Принципы работы, условия проведения консультаций и правила конфиденциальности.</p>
+  </div>
+</div>
+
+<section class="c-legal-page">
+  <div class="container">
+
+    <div class="c-legal-tabs" role="tablist">
+      <button type="button" class="c-legal-tab-btn is-active" data-tab="ethics" onclick="switchLegalTab('ethics')">
+        Этический кодекс
+      </button>
+      <button type="button" class="c-legal-tab-btn" data-tab="terms" onclick="switchLegalTab('terms')">
+        Условия оказания услуг
+      </button>
+      <button type="button" class="c-legal-tab-btn" data-tab="privacy" onclick="switchLegalTab('privacy')">
+        Политика конфиденциальности
+      </button>
+    </div>
+
+    <div class="c-legal-card">
+      {% include legal-ethics.html %}
+      {% include legal-terms.html %}
+      {% include legal-privacy.html %}
+    </div>
+
+  </div>
+</section>
+
+<script>
+  function switchLegalTab(tabName) {
+    document.querySelectorAll('.c-legal-tab-btn').forEach(btn => {
+      btn.classList.toggle('is-active', btn.getAttribute('data-tab') === tabName);
+    });
+
+    document.querySelectorAll('.c-legal-panel').forEach(panel => {
+      panel.classList.toggle('is-active', panel.id === 'panel-' + tabName);
+    });
+
+    if (history.replaceState) {
+      history.replaceState(null, null, '#' + tabName);
+    }
+
+    const tabsEl = document.querySelector('.c-legal-tabs');
+    if (tabsEl) {
+      tabsEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const hash = window.location.hash.replace('#', '');
+    if (['ethics', 'terms', 'privacy'].includes(hash)) {
+      switchLegalTab(hash);
+    }
+  });
+</script>

@@ -1,11 +1,92 @@
 {% if include.show_posts %}
-<div class="container animate">
-  <div class="row" data-pagebreak="6">
-    {% for post in site.posts %}
-      {% bookshop blog-card post=post %}
-    {% endfor %}
+  <div class="container">
+    <div class="row" id="vonge-posts-grid">
+      {% for post in site.posts %}
+        {% bookshop blog-card post=post %}
+      {% endfor %}
+    </div>
   </div>
-</div>
 
-{% bookshop_include pagination %}
+  <!-- Блок кнопок пагинации в стиле темы Vonge -->
+  <div class="container" id="vonge-pagination-wrap" style="display: none;">
+    <div class="row">
+      <div class="col col-12">
+        <nav class="pagination" role="navigation" aria-label="Навигация по страницам">
+          <div class="pagination__inner">
+            <div class="pagination__list">
+              <button type="button" id="vonge-prev-btn" class="pagination__prev" style="border: none; cursor: pointer;">
+                ← Назад
+              </button>
+              <span class="pagination__count" id="vonge-page-info">Страница 1 из 1</span>
+              <button type="button" id="vonge-next-btn" class="pagination__next" style="border: none; cursor: pointer;">
+                Вперёд →
+              </button>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var perPage = 6; // Сколько постов показывать на одной странице (кратно 3: например 6 или 9)
+      var grid = document.getElementById('vonge-posts-grid');
+      var paginationWrap = document.getElementById('vonge-pagination-wrap');
+      if (!grid || !paginationWrap) return;
+
+      var cards = Array.prototype.slice.call(grid.children);
+      var totalItems = cards.length;
+      var totalPages = Math.ceil(totalItems / perPage);
+
+      if (totalPages <= 1) return;
+
+      paginationWrap.style.display = 'block';
+
+      var currentPage = 1;
+      var prevBtn = document.getElementById('vonge-prev-btn');
+      var nextBtn = document.getElementById('vonge-next-btn');
+      var pageInfo = document.getElementById('vonge-page-info');
+
+      function renderPage(page) {
+        currentPage = page;
+        var start = (currentPage - 1) * perPage;
+        var end = start + perPage;
+
+        cards.forEach(function (card, index) {
+          if (index >= start && index < end) {
+            card.style.display = '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        pageInfo.textContent = 'Страница ' + currentPage + ' из ' + totalPages;
+
+        prevBtn.disabled = currentPage === 1;
+        prevBtn.style.opacity = currentPage === 1 ? '0.4' : '1';
+        prevBtn.style.pointerEvents = currentPage === 1 ? 'none' : 'auto';
+
+        nextBtn.disabled = currentPage === totalPages;
+        nextBtn.style.opacity = currentPage === totalPages ? '0.4' : '1';
+        nextBtn.style.pointerEvents = currentPage === totalPages ? 'none' : 'auto';
+      }
+
+      prevBtn.addEventListener('click', function () {
+        if (currentPage > 1) {
+          renderPage(currentPage - 1);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+
+      nextBtn.addEventListener('click', function () {
+        if (currentPage < totalPages) {
+          renderPage(currentPage + 1);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+
+      renderPage(1);
+    });
+  </script>
 {% endif %}

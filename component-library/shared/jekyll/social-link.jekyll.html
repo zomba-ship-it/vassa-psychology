@@ -3,7 +3,15 @@
   <ul class="social__list list-reset">
     {% for social in site.data.social_links.social %}
     <li class="social__item">
-      <a class="social__link" href="{{social.link}}" target="_blank" rel="noopener" aria-label="{{social.icon | downcase}} icon"><ion-icon name="logo-{{social.icon | downcase}}"></ion-icon></a>
+      <a class="social__link" href="{{social.link}}" target="_blank" rel="noopener" aria-label="{{social.icon | downcase}} icon">
+        {% if social.icon == "Telegram" %}
+          <svg xmlns="http://w3.org" viewBox="0 0 512 512" style="width: 1em; height: 1em; fill: currentColor; vertical-align: -0.125em;">
+            <path d="M470.438 154.455L412.398 431.2c-4.396 19.44-15.868 24.277-32.173 15.12l-88.898-65.512-42.893 41.26c-4.748 4.748-8.722 8.722-17.872 8.722l6.386-90.51 164.718-148.83c7.163-6.385-1.555-9.924-11.132-3.538l-203.63 128.215-87.674-27.437c-19.07-5.955-19.416-19.07 3.972-28.22l342.91-132.104c15.876-5.955 29.766 3.538 24.613 27.646z"/>
+          </svg>
+        {% else %}
+          <ion-icon name="logo-{{social.icon | downcase}}"></ion-icon>
+        {% endif %}
+      </a>
     </li>
     {% endfor %}
   </ul>

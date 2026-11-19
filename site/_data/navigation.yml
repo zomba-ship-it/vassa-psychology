@@ -1,16 +1,19 @@
-logo_image: '/images/logo.svg' # You can add own logo. For example '/images/logo.png'.
+logo_image: '/images/logo.png' # Удалите эту строку или оставьте пустой (''), если хотите, чтобы в шапке текстом отображалось ваше имя из _config.yml
 
 menu__settings:
   menu__items:
-    - title: 'Home'
+    - title: 'Главная'
       url: '/'
-    - title: 'Projects'
-      url: '/projects/'
-    - title: 'Blog'
+    - title: 'Обо мне'
+      url: '/about/'
+    - title: 'Индивидуальная работа'
+      url: '/work/'
+    - title: 'Тесты'
+      url: '/tests/'
+    - title: 'Блог'
       url: '/blog/'
-    - title: 'Pages'
-      submenu:
-      - url: '/about/'
-        title: 'About'
-      - url: '/elements/'
-        title: 'Elements'
+    - title: 'Важная информация'
+      url: '/info/'
+    - title: 'Записаться'
+      url: '/contact/'
+

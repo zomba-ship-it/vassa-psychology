@@ -1,4 +1,3 @@
-<!-- begin subscribe -->
 {% assign c = "c-subscribe" %}
 <section class="{{c}} section">
   <div class="container">
@@ -7,26 +6,113 @@
 
         <div class="{{c}}__inner">
           <div class="{{c}}__info">
-            <h3 class="{{c}}__title">{{ include.newsletter_title }}</h3>
-            <div class="{{c}}__subtitle">
-              <span id="ityped"></span>
-            </div>
+            {% if include.newsletter_title %}
+              <h3 class="{{c}}__title">{{ include.newsletter_title }}</h3>
+            {% endif %}
+            {% if include.newsletter_description %}
+              <div class="{{c}}__subtitle">
+                <span id="ityped"></span>
+              </div>
+            {% endif %}
           </div>
 
-          <form class="{{c}}__form validate" action="//{{ include.newsletter_identifier }}"
-            method="POST" id="membedded-subscribe-form" name="membedded-subscribe-form" target="_blank" novalidate>
-            <label class="screen-reader-text" for="mce-EMAIL">Email address</label>
-            <input class="{{c}}__form-email required email" id="mce-EMAIL" type="text" name="EMAIL" placeholder="Your email address">
-            <button class="c-button c-button--primary c-button--large" id="membedded-subscribe" type="submit" name="subscribe">{{ include.newsletter_button }}</button>
-          </form>
+          <div id="fs-success-msg" style="display: none; max-width: 480px; margin: 0 auto 20px; padding: 14px; border-radius: 12px; background: #d4edda; color: #155724; text-align: center;">
+            Спасибо! Ваше сообщение отправлено, я скоро отвечу.
+          </div>
+          <div id="fs-error-msg" style="display: none; max-width: 480px; margin: 0 auto 20px; padding: 14px; border-radius: 12px; background: #f8d7da; color: #721c24; text-align: center;">
+            Ошибка при отправке. Проверьте поля и попробуйте снова.
+          </div>
 
+          <form class="{{c}}__form" id="vonge-contact-form" data-endpoint="f/xdegezzk">
+            <label class="screen-reader-text" for="fs-NAME">Ваше имя</label>
+            <input
+              class="{{c}}__form-email"
+              id="fs-NAME"
+              type="text"
+              name="name"
+              placeholder="Ваше имя"
+              required
+            >
+
+            <label class="screen-reader-text" for="fs-EMAIL">Ваш Email</label>
+            <input
+              class="{{c}}__form-email"
+              id="fs-EMAIL"
+              type="email"
+              name="email"
+              placeholder="Ваш email для ответа"
+              required
+            >
+
+            <label class="screen-reader-text" for="fs-MESSAGE">Сообщение</label>
+            <textarea
+              class="{{c}}__form-email"
+              id="fs-MESSAGE"
+              name="message"
+              rows="4"
+              placeholder="Напишите ваше сообщение..."
+              style="height: auto; padding-top: 18px; padding-bottom: 18px; resize: vertical;"
+              required
+            ></textarea>
+
+            <button class="c-button c-button--primary c-button--large" type="submit" id="fs-submit-btn">
+              {{ include.newsletter_button | default: "Отправить сообщение" }}
+            </button>
+          </form>
         </div>
+
       </div>
     </div>
   </div>
 </section>
-<!-- end subscribe -->
 
 <script>
-  var itype_text = ['{{ include.newsletter_description }}'];
+  var itype_text = ['{{ include.newsletter_description | default: "Напишите мне, если у вас есть вопрос или предложение!" }}'];
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var form = document.getElementById('vonge-contact-form');
+    if (!form) return;
+
+    var successBox = document.getElementById('fs-success-msg');
+    var errorBox = document.getElementById('fs-error-msg');
+    var submitBtn = document.getElementById('fs-submit-btn');
+
+    var targetUrl = ['https:', '', 'formspree.io', 'f', 'xdegezzk'].join('/');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      successBox.style.display = 'none';
+      errorBox.style.display = 'none';
+      submitBtn.disabled = true;
+      var originalText = submitBtn.textContent;
+      submitBtn.textContent = 'Отправка...';
+
+      fetch(targetUrl, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      })
+      .then(function (response) {
+        if (response.ok) {
+          form.reset();
+          successBox.style.display = 'block';
+        } else {
+          return response.json().then(function (data) {
+            errorBox.textContent = (data && data.errors)
+              ? data.errors.map(function (err) { return err.message; }).join(', ')
+              : 'Не удалось отправить сообщение.';
+            errorBox.style.display = 'block';
+          });
+        }
+      })
+      .catch(function () {
+        errorBox.textContent = 'Ошибка сети. Проверьте подключение к интернету.';
+        errorBox.style.display = 'block';
+      })
+      .finally(function () {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      });
+    });
+  });
 </script>

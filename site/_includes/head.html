@@ -29,3 +29,36 @@
 
   <link rel="stylesheet" href="/assets/main.css">
 </head>
+
+<style>
+  @media only screen and (min-width: 1025px) {
+    /* Все пункты меню строго в одну строку с аккуратными отступами */
+    .main-nav__box .nav__list {
+      display: flex !important;
+      flex-wrap: nowrap !important;
+      align-items: center !important;
+      gap: 20px !important;
+    }
+
+    .main-nav__box .nav__item {
+      margin: 0 !important;
+      white-space: nowrap !important;
+    }
+
+    .main-nav__box .nav__link {
+      font-size: 15px !important;
+    }
+
+    /* Иконки соцсетей в шапке строго в один горизонтальный ряд */
+    .c-header .social__list {
+      display: flex !important;
+      flex-wrap: nowrap !important;
+      align-items: center !important;
+      gap: 12px !important;
+    }
+
+    .c-header .social__item {
+      margin: 0 !important;
+    }
+  }
+</style>

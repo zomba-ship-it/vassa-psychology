@@ -1,15 +1,13 @@
 footer_menu__settings:
   menu__items:
-    - title: 'Home'
+    - title: 'Главная'
       url: '/'
-    - title: 'Projects'
-      url: '/projects/'
-    - title: 'Elements'
-      url: '/elements/'
-    - title: 'About'
+    - title: 'Обо мне'
       url: '/about/'
-    - title: 'Blog'
+    - title: 'Блог'
       url: '/blog/'
+    - title: 'Записаться в Telegram'
+      url: 'https://t.me/vassapsychology'
 
 copyright_text_html: >-
-  <p> 2025 &copy; <a href="/">Vonge</a>. Template by <a href="https://cloudcannon.com/">CloudCannon</a>.</p>
+  <p>2026 &copy; <a href="/">Васса Солдатова</a> — психолог-консультант. Связаться: <a href="https://t.me/vassapsychology" target="_blank" rel="noopener">@VASSAPSYCHOLOGY</a></p>
