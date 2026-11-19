@@ -60,7 +60,7 @@
 
               {% if post.image %}
               <div class="c-blog-card__image-wrap">
-                <a class="c-blog-card__image" href="{{ post.url }}">
+                <a class="c-blog-card__image" href="{{ post.url | relative_url }}">
                   <img loading="lazy" src="{{ post.image | relative_url }}" alt="{{ post.title }}">
                 </a>
               </div>
@@ -77,7 +77,7 @@
                 {% endif %}
 
                 <h2 class="c-blog-card__title">
-                  <a href="{{ post.url }}">{{ post.title }}</a>
+                  <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
                 </h2>
 
                 <p class="c-blog-card__excerpt">

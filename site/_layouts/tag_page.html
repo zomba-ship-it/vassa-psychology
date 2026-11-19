@@ -16,7 +16,7 @@ layout: default
           
               {% if post.image %}
               <div class="image-wrap">
-                <a class="article__image" href="{{ post.url }}">
+                <a class="article__image" href="{{ post.url | relative_url }}">
                   <img loading="lazy" src="{{ post.image | relative_url }}" alt="{{ post.title }}">
                 </a>
               </div>
@@ -33,7 +33,7 @@ layout: default
                 {% endif %}
           
                 <h2 class="article__title">
-                  <a href="{{ post.url }}">{{ post.title }}</a>
+                  <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
                 </h2>
           
                 <p class="article__excerpt">

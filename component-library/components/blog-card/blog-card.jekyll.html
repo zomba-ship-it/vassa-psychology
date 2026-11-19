@@ -4,7 +4,7 @@
 
     {% if include.post.image %}
     <div class="{{c}}__image-wrap">
-      <a class="{{c}}__image" href="{{ include.post.url }}">
+      <a class="{{c}}__image" href="{{ include.post.url | relative_url }}">
         <img loading="lazy" src="{{ include.post.image | relative_url }}" alt="{{ include.post.title }}">
       </a>
     </div>
@@ -21,7 +21,7 @@
       {% endif %}
 
       <h2 class="{{c}}__title">
-        <a href="{{ include.post.url }}">{{ include.post.title }}</a>
+        <a href="{{ include.post.url | relative_url }}">{{ include.post.title }}</a>
       </h2>
 
       <p class="{{c}}__excerpt">
