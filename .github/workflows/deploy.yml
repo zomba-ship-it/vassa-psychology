@@ -39,6 +39,20 @@ jobs:
         with:
           path: "./site/_site"
 
+      - name: Deploy mirror to vassa-psychology-ru
+        run: |
+          rm -rf /tmp/mirror
+          cp -r ./site/_site /tmp/mirror
+          echo "vassapsychology.ru" > /tmp/mirror/CNAME
+          cd /tmp/mirror
+          git init
+          git config user.name "zomba-ship-it"
+          git config user.email "zomba-ship-it@://github.com"
+          git checkout -b gh-pages
+          git add .
+          git commit -m "Mirror deploy to vassapsychology.ru"
+          git push --force "https://x-access-token:${{ secrets.MIRROR_TOKEN }}@://github.com" gh-pages
+
   deploy:
     environment:
       name: github-pages
