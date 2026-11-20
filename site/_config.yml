@@ -1,6 +1,6 @@
 title: Васса Солдатова — психолог-консультант
-url: "https://zomba-ship-it.github.io"
-baseurl: "/vassa-psychology"
+url: "https://vassapsychology.online"
+baseurl: ""
 
 plugins:
   - jekyll-bookshop
